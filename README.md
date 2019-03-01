@@ -58,7 +58,7 @@ The handin is a link to github. The readme file must explain where the textual r
 
 ### Notes - Not part of the hand-in!
 
-`
+```
 Run the mysql shell with parameter
 --local-infile
 
@@ -68,4 +68,4 @@ set global local_infile = 1;
 And then use this command to import individual files. Also change the table names and file path to your own
 
 load xml local infile '/full/path/to/Badges.xml' into table badges rows identified by '<row>';
-`
+```
