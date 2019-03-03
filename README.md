@@ -277,7 +277,7 @@ alter table comments modify Id int auto_increment;
 
 Write a stored procedure denormalizeComments(postID) that moves all comments for a post (the parameter) into a json array on the post.
 
-**Workbench:**
+**Through Workbench:**
 ```mysql
 
 CREATE PROCEDURE `denormalizeComments` (p_postID INT)
@@ -288,8 +288,18 @@ END
 DELIMITER;
 ```
 
-**Docker Container: **
+**Through MySQL Docker Container:**
+
 ```mysql
+DROP procedure IF EXISTS `denormalizeComments`;
+
+DELIMITER $$
+CREATE PROCEDURE `denormalizeComments` (p_postID INT)
+BEGIN
+update posts set Comments = (select json_arrayagg(Text) from comments where PostId = p_postID group by PostId) where Id = p_postID;
+END$$
+
+DELIMITER ;
 
 ```
 
@@ -308,6 +318,8 @@ Make a materialized view that has json objects with questions and its answeres, 
 #### Exercise 5
 
 Using the materialized view from exercise 4, create a stored procedure with one parameter keyword, which returns all posts where the keyword appears at least once, and where at least two comments mention the keyword as well.
+
+-------
 
 ### Notes - Not part of the hand-in!
 
