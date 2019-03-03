@@ -56,7 +56,7 @@ The handin is a link to github. The readme file must explain where the textual r
 
 ------
 
-### Setup
+## Setup
 
 #### The Docker Container
 Assignment done using Vagrant, Docker and Workbench
@@ -70,6 +70,7 @@ Access the Docker container:
 
 `docker exec -it my_db5mysql bash`
 
+
 Within the Docker Container, run the following 2 commands to update the container and download 7zip:
 
 `apt-get update`
@@ -81,23 +82,39 @@ With the container, create a new folder and download the test-data:
 
 `mkdir workspace`
 
-Download the Data:
+Download the Data **Heads-up: You might want to start making some coffee while the data is being downloaded**:
 
 `wget https://archive.org/download/stackexchange/askubuntu.com.7z`
 
-Extract the Data:
+Extract the Data **Heads-up: You might want to start running a marathon while the data is being extracted**:
 
 `7z e askubuntu.com.7z`
 
 -----
 
-#### Mysql And The Data
+#### Connect to the Database through WorkBench
+
+To connect to the Database through Workbench, make sure you have the latest version of the [MySQL Workbench](https://dev.mysql.com/downloads/workbench/)
+
+My Default information to connect to the Docker Container:
+
+*IP*: `192.168.33.10`
+
+*Port*: `3306`
+
+*User*: `root`
+
+*Password*: `iphone2019`
+
+-----
+
+#### Setup Mysql And The Database 
 
 Start MySQL in the container:
 
 `mysql -u root -piphone2019 --local-infile`
 
-Run the following comman to set the local-infile:
+Run the following command to set the local-infile:
 
 `set global local_infile = 1;`
 
@@ -194,35 +211,37 @@ CREATE TABLE votes (
     CreationDate DATETIME
 );
 
-load data local infile 'Badges.xml'
+SET GLOBAL local_infile = 1;
+
+load XML local infile 'Badges.xml'
 into table badges
 rows identified by '<row>';
 
-load data local infile 'Comments.xml'
+load XML local infile 'Comments.xml'
 into table comments
 rows identified by '<row>';
 
-load data local infile 'PostHistory.xml'
+load XML local infile 'PostHistory.xml'
 into table post_history
 rows identified by '<row>';
 
-load data local infile 'PostLinks.xml'
+load XML local infile 'PostLinks.xml'
 into table post_links
 rows identified BY '<row>';
 
-load data local infile 'Posts.xml'
+load XML local infile 'Posts.xml'
 into table posts
 rows identified by '<row>';
 
-load data local infile 'Tags.xml'
+load XML local infile 'Tags.xml'
 into table tags
 rows identified BY '<row>';
 
-load data local infile 'Users.xml'
+load XML local infile 'Users.xml'
 into table users
 rows identified by '<row>';
 
-load data local infile 'Votes.xml'
+load XML local infile 'Votes.xml'
 into table votes
 rows identified by '<row>';
 
@@ -243,21 +262,7 @@ create index votes_idx_1 on votes(PostId);
 ```
 -----
 
-#### Inspect the Data and prepare for Procedures/Triggers
 
-To connect to the Database and see the data, make sure you have the latest version of the [MySQL Workbench](https://dev.mysql.com/downloads/workbench/)
-
-My Default information to connect to the Docker Container:
-
-*IP*: `192.168.33.10`
-
-*Port*: `3306`
-
-*User*: `root`
-
-*Password*: `iphone2019`
-
------
 
 ### Notes - Not part of the hand-in!
 
