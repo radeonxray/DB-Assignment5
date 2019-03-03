@@ -58,23 +58,40 @@ The handin is a link to github. The readme file must explain where the textual r
 
 ### Setup
 
+#### The Docker Container
 Assignment done using Vagrant, Docker and Workbench
 
 Run the following command with Docker to create the container:
+
 `docker run --name my_db5mysql -p 3306:3306 -e MYSQL_ROOT_PASSWORD=iphone2019 -d mysql`
+
 
 Access the Docker container:
 
 `docker exec -it my_db5mysql bash`
 
 Within the Docker Container, run the following 2 commands to update the container and download 7zip:
+
 `apt-get update`
+
 `apt-get install wget p7zip-full -y`
 
+
 With the container, create a new folder and download the test-data:
+
 `mkdir workspace`
-`wget https://archive.org/download/stackexchange/askubuntu.com.7z
-7z e askubuntu.com.7z  `
+
+Download the Data:
+
+`wget https://archive.org/download/stackexchange/askubuntu.com.7z`
+
+Extract the Data:
+
+`7z e askubuntu.com.7z`
+
+-----
+
+#### Mysql And The Data
 
 Start MySQL in the container:
 
@@ -83,6 +100,150 @@ Start MySQL in the container:
 Run the following comman to set the local-infile:
 
 `set global local_infile = 1;`
+
+Run the following long command, to setup the Database and its tables:
+
+```mysql
+create database stackoverflow DEFAULT CHARACTER SET utf8 DEFAULT COLLATE utf8_general_ci;
+
+use stackoverflow;
+
+create table badges (
+  Id INT NOT NULL PRIMARY KEY,
+  UserId INT,
+  Name VARCHAR(50),
+  Date DATETIME
+);
+
+CREATE TABLE comments (
+    Id INT NOT NULL PRIMARY KEY,
+    PostId INT NOT NULL,
+    Score INT NOT NULL DEFAULT 0,
+    Text TEXT,
+    CreationDate DATETIME,
+    UserId INT NOT NULL
+);
+
+CREATE TABLE post_history (
+    Id INT NOT NULL PRIMARY KEY,
+    PostHistoryTypeId SMALLINT NOT NULL,
+    PostId INT NOT NULL,
+    RevisionGUID VARCHAR(36),
+    CreationDate DATETIME,
+    UserId INT NOT NULL,
+    Text TEXT
+);
+CREATE TABLE post_links (
+  Id INT NOT NULL PRIMARY KEY,
+  CreationDate DATETIME DEFAULT NULL,
+  PostId INT NOT NULL,
+  RelatedPostId INT NOT NULL,
+  LinkTypeId INT DEFAULT NULL
+);
+
+
+CREATE TABLE posts (
+    Id INT NOT NULL PRIMARY KEY,
+    PostTypeId SMALLINT,
+    AcceptedAnswerId INT,
+    ParentId INT,
+    Score INT NULL,
+    ViewCount INT NULL,
+    Body text NULL,
+    OwnerUserId INT NOT NULL,
+    LastEditorUserId INT,
+    LastEditDate DATETIME,
+    LastActivityDate DATETIME,
+    Title varchar(256) NOT NULL,
+    Tags VARCHAR(256),
+    AnswerCount INT NOT NULL DEFAULT 0,
+    CommentCount INT NOT NULL DEFAULT 0,
+    FavoriteCount INT NOT NULL DEFAULT 0,
+    CreationDate DATETIME
+);
+
+CREATE TABLE tags (
+  Id INT NOT NULL PRIMARY KEY,
+  TagName VARCHAR(50) CHARACTER SET latin1 DEFAULT NULL,
+  Count INT DEFAULT NULL,
+  ExcerptPostId INT DEFAULT NULL,
+  WikiPostId INT DEFAULT NULL
+);
+
+
+CREATE TABLE users (
+    Id INT NOT NULL PRIMARY KEY,
+    Reputation INT NOT NULL,
+    CreationDate DATETIME,
+    DisplayName VARCHAR(50) NULL,
+    LastAccessDate  DATETIME,
+    Views INT DEFAULT 0,
+    WebsiteUrl VARCHAR(256) NULL,
+    Location VARCHAR(256) NULL,
+    AboutMe TEXT NULL,
+    Age INT,
+    UpVotes INT,
+    DownVotes INT,
+    EmailHash VARCHAR(32)
+);
+
+CREATE TABLE votes (
+    Id INT NOT NULL PRIMARY KEY,
+    PostId INT NOT NULL,
+    VoteTypeId SMALLINT,
+    CreationDate DATETIME
+);
+
+load data local infile 'Badges.xml'
+into table badges
+rows identified by '<row>';
+
+load data local infile 'Comments.xml'
+into table comments
+rows identified by '<row>';
+
+load data local infile 'PostHistory.xml'
+into table post_history
+rows identified by '<row>';
+
+load data local infile 'PostLinks.xml'
+into table post_links
+rows identified BY '<row>';
+
+load data local infile 'Posts.xml'
+into table posts
+rows identified by '<row>';
+
+load data local infile 'Tags.xml'
+into table tags
+rows identified BY '<row>';
+
+load data local infile 'Users.xml'
+into table users
+rows identified by '<row>';
+
+load data local infile 'Votes.xml'
+into table votes
+rows identified by '<row>';
+
+create index badges_idx_1 on badges(UserId);
+
+create index comments_idx_1 on comments(PostId);
+create index comments_idx_2 on comments(UserId);
+
+create index post_history_idx_1 on post_history(PostId);
+create index post_history_idx_2 on post_history(UserId);
+
+create index posts_idx_1 on posts(AcceptedAnswerId);
+create index posts_idx_2 on posts(ParentId);
+create index posts_idx_3 on posts(OwnerUserId);
+create index posts_idx_4 on posts(LastEditorUserId);
+
+create index votes_idx_1 on votes(PostId);
+```
+-----
+
+#### Inspect the Data and prepare for Procedures/Triggers
 
 To connect to the Database and see the data, make sure you have the latest version of the [MySQL Workbench](https://dev.mysql.com/downloads/workbench/)
 
@@ -96,7 +257,7 @@ My Default information to connect to the Docker Container:
 
 *Password*: `iphone2019`
 
-
+-----
 
 ### Notes - Not part of the hand-in!
 
@@ -111,3 +272,11 @@ And then use this command to import individual files. Also change the table name
 
 load xml local infile '/full/path/to/Badges.xml' into table badges rows identified by '<row>';
 ```
+
+Remember to `stop` any previous containers that are running on port 3306
+
+Command to see containers:
+
+`docker ps`
+`docker ls`
+`docker container ls --all`
