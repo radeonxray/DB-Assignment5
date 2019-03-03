@@ -73,7 +73,8 @@ Within the Docker Container, run the following 2 commands to update the containe
 
 With the container, create a new folder and download the test-data:
 `mkdir workspace`
-`wget `
+`wget https://archive.org/download/stackexchange/askubuntu.com.7z
+7z e askubuntu.com.7z  `
 
 Start MySQL in the container:
 
