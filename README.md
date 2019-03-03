@@ -337,13 +337,52 @@ Followed by:
 
 `SELECT Id, Comments from posts where Id < 24;`
 
+This Exercise made me notice, that the `comments`-table has not been set to auto-increment the `id`-column! 
+
 ### Exercise 3
 
 Rather than using a trigger, create a stored procedure to add a comment to a post - adding it both to the comment table and the json array
 
+**Through WorkBench:**
+
+```mysql
+CREATE DEFINER=`root`@`%` PROCEDURE `addNewComment`(p_id INT, p_postID INT, p_score INT, p_text TEXT, p_userid INT)
+BEGIN
+INSERT INTO comments(Id, PostId, Score, Text, CreationDate, UserId) value (p_id, p_postID, p_score, p_text, NOW(), p_userid);
+END
+```
+
+**Through MySQL Docker Container:**
+```mysql
+USE `stackoverflow`;
+DROP procedure IF EXISTS `addNewComment`;
+
+DELIMITER $$
+USE `stackoverflow`$$
+CREATE DEFINER=`root`@`%` PROCEDURE `addNewComment`(p_id INT, p_postID INT, p_score INT, p_text TEXT, p_userid INT)
+BEGIN
+INSERT INTO comments(Id, PostId, Score, Text, CreationDate, UserId) value (p_id, p_postID, p_score, p_text, NOW(), p_userid);
+END$$
+
+DELIMITER ;
+```
+
+Test the new Procedure by running the following Query:
+
+*Please Note: If you change the comment to anything positive regarding Liverpool, the Query will not work and your machine will automatically uploade all your embarrassing photos to Facebook!*:
+
+`call addNewComment(2,24,8, "20 Times, 20 Times, Man United!", 17);`
+
+See that the data has been added:
+
+`select Id, Comments from posts where Id < 25;`
+
+
 ### Exercise 4
 
 Make a materialized view that has json objects with questions and its answeres, but no comments. Both the question and each of the answers must have the display name of the user, the text body, and the score.
+
+
 
 ### Exercise 5
 
