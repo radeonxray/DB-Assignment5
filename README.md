@@ -382,11 +382,13 @@ See that the data has been added:
 
 Make a materialized view that has json objects with questions and its answeres, but no comments. Both the question and each of the answers must have the display name of the user, the text body, and the score.
 
-
+**[Did not finish this Exercise]**
 
 ### Exercise 5
 
 Using the materialized view from exercise 4, create a stored procedure with one parameter keyword, which returns all posts where the keyword appears at least once, and where at least two comments mention the keyword as well.
+
+**[Did not finish this Exercise]**
 
 -------
 
