@@ -56,6 +56,47 @@ The handin is a link to github. The readme file must explain where the textual r
 
 ------
 
+### Setup
+
+Assignment done using Vagrant, Docker and Workbench
+
+Run the following command with Docker to create the container:
+`docker run --name my_db5mysql -p 3306:3306 -e MYSQL_ROOT_PASSWORD=iphone2019 -d mysql`
+
+Access the Docker container:
+
+`docker exec -it my_db5mysql bash`
+
+Within the Docker Container, run the following 2 commands to update the container and download 7zip:
+`apt-get update`
+`apt-get install wget p7zip-full -y`
+
+With the container, create a new folder and download the test-data:
+`mkdir workspace`
+`wget `
+
+Start MySQL in the container:
+
+`mysql -u root -piphone2019 --local-infile`
+
+Run the following comman to set the local-infile:
+
+`set global local_infile = 1;`
+
+To connect to the Database and see the data, make sure you have the latest version of the [MySQL Workbench](https://dev.mysql.com/downloads/workbench/)
+
+My Default information to connect to the Docker Container:
+
+*IP*: `192.168.33.10`
+
+*Port*: `3306`
+
+*User*: `root`
+
+*Password*: `iphone2019`
+
+
+
 ### Notes - Not part of the hand-in!
 
 ```
