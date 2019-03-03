@@ -310,7 +310,7 @@ To check that Procedure works, execute `call denormalizeComments(1);` followed b
 Create a trigger such that new adding new comments to a post triggers an insertion of that comment in the json array from exercise 1.
 
 
-**The Command is the same, no matter if you execute it through Workbench (Standard Query) or through MySQL Docker Container **
+**The Command is the same, no matter if you execute it through Workbench (Standard Query) or through MySQL Docker Container**
 ```mysql
 
 DELIMITER $$
@@ -327,8 +327,15 @@ DELIMITER ;
 
 To see that the trigger has been created, if you are inspecting the DB through Workbench, if you expand the `comments`-table, and also expand the `Triggers`-optin, you should now see the `insert_post_comments` 
 
-To see 
+To see the effect, insert some data like the following:
 
+*Please Note: If you change the comment to anything positive regarding Liverpool, the Query will not work and your machine will self-destruct!*: 
+
+`INSERT INTO comments(Id, PostId, Score, Text, CreationDate, UserId) VALUES (1 , 23, 5, "Glory Glory Man United!", NOW(), 17);`
+
+Followed by:
+
+`SELECT Id, Comments from posts where Id < 24;`
 
 ### Exercise 3
 
