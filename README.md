@@ -110,6 +110,8 @@ My Default information to connect to the Docker Container:
 
 #### Setup Mysql And The Database 
 
+Place your Terminal/Bash in the previously created Workspace-directory in your Container.
+
 Start MySQL in the container:
 
 `mysql -u root -piphone2019 --local-infile`
@@ -118,7 +120,9 @@ Run the following command to set the local-infile:
 
 `set global local_infile = 1;`
 
-Run the following long command, to setup the Database and its tables:
+Run the following long command, to setup the Database, its tables and data 
+
+**NOTE: Executing this command will take a couple of minutes, so don't panic if you don't see the data immidiatly through Workbench**:
 
 ```mysql
 create database stackoverflow DEFAULT CHARACTER SET utf8 DEFAULT COLLATE utf8_general_ci;
