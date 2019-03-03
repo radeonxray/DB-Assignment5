@@ -285,7 +285,6 @@ BEGIN
 update posts set Comments = (select json_arrayagg(Text) from comments where PostId = p_postID group by PostId) where Id = p_postID;
 END
 
-DELIMITER;
 ```
 
 **Through MySQL Docker Container:**
@@ -303,9 +302,33 @@ DELIMITER ;
 
 ```
 
+To check that Procedure works, execute `call denormalizeComments(1);` followed by `SELECT Id, Comments from posts where Id < 5;`
+
+
 ### Exercise 2
 
 Create a trigger such that new adding new comments to a post triggers an insertion of that comment in the json array from exercise 1.
+
+
+**The Command is the same, no matter if you execute it through Workbench (Standard Query) or through MySQL Docker Container **
+```mysql
+
+DELIMITER $$
+DROP TRIGGER if exists insert_post_comments$$
+CREATE TRIGGER insert_post_comments
+AFTER INSERT ON comments
+FOR EACH ROW
+BEGIN
+CALL denormalizeComments(NEW.PostId);
+END $$
+DELIMITER ;
+
+```
+
+To see that the trigger has been created, if you are inspecting the DB through Workbench, if you expand the `comments`-table, and also expand the `Triggers`-optin, you should now see the `insert_post_comments` 
+
+To see 
+
 
 ### Exercise 3
 
