@@ -277,6 +277,7 @@ alter table comments modify Id int auto_increment;
 
 Write a stored procedure denormalizeComments(postID) that moves all comments for a post (the parameter) into a json array on the post.
 
+**Workbench:**
 ```mysql
 
 CREATE PROCEDURE `denormalizeComments` (p_postID INT)
@@ -287,7 +288,10 @@ END
 DELIMITER;
 ```
 
+**Docker Container: **
+```mysql
 
+```
 
 #### Exercise 2
 
